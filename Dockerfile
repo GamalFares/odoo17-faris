@@ -1,14 +1,16 @@
-# ==========================
-#  Odoo 17 Dockerfile (no odoo-bin)
-# ==========================
+# ==========================================================
+# Odoo 17.0 Custom Dockerfile for Render Deployment
+# ==========================================================
 
+# 1️⃣ Base image
 FROM python:3.11-slim
 
-ENV ODOO_HOME=/usr/src/odoo
-ENV PATH="$ODOO_HOME:$PATH"
+# 2️⃣ Environment variables
+ENV ODOO_HOME=/usr/src/odoo \
+    PATH="$ODOO_HOME:$PATH"
 
-# === System dependencies ===
-RUN apt-get update && apt-get install -y \
+# 3️⃣ System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
     gcc \
@@ -24,22 +26,29 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# === Create Odoo user ===
+# 4️⃣ Create odoo user and working directory
 RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
-
 WORKDIR $ODOO_HOME
 
-# === Copy source code ===
+# 5️⃣ Copy Odoo source and dependencies
 COPY odoo $ODOO_HOME/odoo
 COPY requirements.txt $ODOO_HOME/requirements.txt
 COPY odoo.conf /etc/odoo/odoo.conf
+COPY odoo-bin $ODOO_HOME/odoo-bin
 
-# === Install dependencies ===
-RUN pip install --upgrade pip && pip install -r $ODOO_HOME/requirements.txt
+# 6️⃣ Permissions
+RUN chmod +x $ODOO_HOME/odoo-bin && chown -R odoo:odoo $ODOO_HOME
 
-# === Expose Odoo port ===
+# 7️⃣ Install Python packages
+RUN pip install --upgrade pip && \
+    pip install -r $ODOO_HOME/requirements.txt
+
+# 8️⃣ Expose Odoo port
 EXPOSE 8069
 
-# === Run Odoo ===
+# 9️⃣ Switch to odoo user
 USER odoo
-CMD ["python3", "-m", "odoo", "-c", "/etc/odoo/odoo.conf"]
+
+# 🔟 Default command to start Odoo
+CMD ["./odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+
