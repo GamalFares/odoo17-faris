@@ -1,54 +1,56 @@
-# === Base image ===
+# Use official Python base image
 FROM python:3.11-slim
 
-# === Set environment variables ===
+# Set environment variables
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
-    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    ODOO_HOME=/usr/src/odoo \
-    PATH="/usr/src/odoo/venv/bin:$PATH"
+    PYTHONPATH=/usr/src/odoo
 
-# === Install system dependencies ===
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    gcc \
-    g++ \
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     libpq-dev \
     libxml2-dev \
     libxslt1-dev \
-    libsasl2-dev \
-    libldap2-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libssl-dev \
-    python3-venv \
-    build-essential \
+    libffi-dev \
+    wget \
+    curl \
+    git \
+    xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# === Create odoo user ===
+# Create Odoo user
 RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
 
-# === Set working directory ===
+# Set working directory
 WORKDIR /usr/src/odoo
 
-# === Copy Odoo source and configs ===
+# Copy Odoo source code
 COPY odoo /usr/src/odoo/odoo
 COPY odoo-bin /usr/src/odoo/odoo-bin
 COPY odoo.conf /etc/odoo/odoo.conf
 COPY requirements.txt /usr/src/odoo/requirements.txt
 
-# === Make odoo-bin executable ===
+# Give execution permission to odoo-bin
 RUN chmod +x /usr/src/odoo/odoo-bin
 
-# === Create virtual environment and install Python dependencies ===
+# Create virtualenv and install Python requirements
 RUN python3 -m venv /usr/src/odoo/venv \
     && /usr/src/odoo/venv/bin/pip install --upgrade pip \
     && /usr/src/odoo/venv/bin/pip install -r /usr/src/odoo/requirements.txt
 
-# === Set the container user ===
+# Change ownership to odoo user
+RUN chown -R odoo:odoo /usr/src/odoo /etc/odoo
+
+# Switch to odoo user
 USER odoo
 
-# === Default command to run Odoo ===
-CMD ["/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+# Set workdir again for user context
+WORKDIR /usr/src/odoo
 
-
+# Run Odoo using venv python
+CMD ["/usr/src/odoo/venv/bin/python", "odoo-bin", "-c", "/etc/odoo/odoo.conf"]
