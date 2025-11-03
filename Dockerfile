@@ -1,17 +1,17 @@
-# -------------------------------
-# Base image
-# -------------------------------
+# Use official Python 3.11 slim image
 FROM python:3.11-slim
 
-# -------------------------------
-# Environment variables
-# -------------------------------
+# Set environment variables
 ENV ODOO_HOME=/usr/src/odoo
 ENV PATH="$ODOO_HOME/venv/bin:$PATH"
 
-# -------------------------------
+# Create Odoo user
+RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
+
+# Set working directory
+WORKDIR $ODOO_HOME
+
 # Install system dependencies
-# -------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
@@ -26,42 +26,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# -------------------------------
-# Create odoo user
-# -------------------------------
-RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
-
-# -------------------------------
-# Set working directory
-# -------------------------------
-WORKDIR $ODOO_HOME
-
-# -------------------------------
-# Copy Odoo source files
-# -------------------------------
-COPY odoo-bin $ODOO_HOME/odoo-bin
+# Copy files from repo to container
 COPY odoo $ODOO_HOME/odoo
+COPY odoo-bin $ODOO_HOME/odoo-bin
 COPY odoo.conf $ODOO_HOME/odoo.conf
 COPY requirements.txt $ODOO_HOME/requirements.txt
 
-# -------------------------------
-# Install Python dependencies
-# -------------------------------
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 
-# -------------------------------
 # Make odoo-bin executable
-# -------------------------------
 RUN chmod +x $ODOO_HOME/odoo-bin
 
-# -------------------------------
-# Expose Odoo port
-# -------------------------------
+# Expose default Odoo port
 EXPOSE 8069
 
-# -------------------------------
 # Run Odoo
-# -------------------------------
-USER odoo
 CMD ["python3", "/usr/src/odoo/odoo-bin", "-c", "/usr/src/odoo/odoo.conf"]
+
