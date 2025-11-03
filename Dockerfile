@@ -1,52 +1,64 @@
 # -------------------------------
-# Base image
+# Odoo 17 Dockerfile
 # -------------------------------
+
+# Base image
 FROM python:3.11-slim
 
-# -------------------------------
-# Environment variables
-# -------------------------------
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV PYTHONUNBUFFERED 1
+# Set environment variables
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PYTHONUNBUFFERED=1 \
+    ODOO_USER=odoo \
+    ODOO_HOME=/usr/src/odoo
 
-# -------------------------------
-# Create Odoo user
-# -------------------------------
-RUN useradd -m -d /home/odoo -s /bin/bash odoo
+# Create a non-root user
+RUN useradd -m -d $ODOO_HOME -s /bin/bash $ODOO_USER
 
-# -------------------------------
 # Set working directory
-# -------------------------------
-WORKDIR /usr/src/odoo
+WORKDIR $ODOO_HOME
 
 # -------------------------------
-# Copy project files into container
+# Install system dependencies
 # -------------------------------
-COPY . /usr/src/odoo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    libxml2-dev \
+    libxslt-dev \
+    libpq-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libffi-dev \
+    curl \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # -------------------------------
-# Upgrade pip and install dependencies
+# Copy requirements and install
 # -------------------------------
+COPY requirements.txt $ODOO_HOME/requirements.txt
 RUN pip install --upgrade pip
-RUN pip install -r /usr/src/odoo/requirements.txt
+RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 
 # -------------------------------
+# Copy the rest of the project
+# -------------------------------
+COPY . $ODOO_HOME
+
 # Make odoo-bin executable
-# -------------------------------
-RUN chmod +x /usr/src/odoo/odoo-bin
+RUN chmod +x $ODOO_HOME/odoo-bin
 
-# -------------------------------
-# Expose Odoo port
-# -------------------------------
+# Set permissions for non-root user
+RUN chown -R $ODOO_USER:$ODOO_USER $ODOO_HOME
+
+# Switch to non-root user
+USER $ODOO_USER
+
+# Expose default Odoo port
 EXPOSE 8069
 
-# -------------------------------
-# Use non-root user
-# -------------------------------
-USER odoo
+# Default command
+CMD ["python", "odoo-bin", "-c", "odoo.conf"]
 
-# -------------------------------
-# Start Odoo
-# -------------------------------
-CMD ["python3", "/usr/src/odoo/odoo-bin", "-c", "/usr/src/odoo/odoo.conf"]
