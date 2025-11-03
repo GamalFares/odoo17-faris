@@ -39,8 +39,8 @@ WORKDIR $ODOO_HOME
 # -------------------------------
 # Copy Odoo source files
 # -------------------------------
-COPY odoo $ODOO_HOME/odoo
 COPY odoo-bin $ODOO_HOME/odoo-bin
+COPY odoo $ODOO_HOME/odoo
 COPY odoo.conf $ODOO_HOME/odoo.conf
 COPY requirements.txt $ODOO_HOME/requirements.txt
 
