@@ -7,8 +7,7 @@ FROM python:3.11-slim
 # Environment variables
 # -------------------------------
 ENV ODOO_HOME=/usr/src/odoo
-ENV PYTHONUNBUFFERED=1
-ENV PATH="$ODOO_HOME:$PATH"
+ENV PATH="$ODOO_HOME/venv311/bin:$PATH"
 
 # -------------------------------
 # Install system dependencies
@@ -39,16 +38,11 @@ RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
 WORKDIR $ODOO_HOME
 
 # -------------------------------
-# Copy files from repo to container
+# Copy source files
 # -------------------------------
-# Copy the full Odoo source
 COPY odoo $ODOO_HOME/odoo
-
-# Copy odoo-bin if it exists (adjust path if in root)
-COPY odoo/odoo-bin $ODOO_HOME/odoo-bin
-COPY odoo/odoo.conf $ODOO_HOME/odoo.conf
-
-# Copy requirements
+COPY odoo-bin $ODOO_HOME/odoo-bin
+COPY odoo.conf $ODOO_HOME/odoo.conf
 COPY requirements.txt $ODOO_HOME/requirements.txt
 
 # -------------------------------
@@ -57,23 +51,20 @@ COPY requirements.txt $ODOO_HOME/requirements.txt
 RUN chmod +x $ODOO_HOME/odoo-bin
 
 # -------------------------------
-# Install Python dependencies
+# Create virtual environment and install Python dependencies
 # -------------------------------
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
+RUN python -m venv venv311
+RUN $ODOO_HOME/venv311/bin/pip install --upgrade pip
+RUN $ODOO_HOME/venv311/bin/pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 
 # -------------------------------
-# Switch to Odoo user
+# Set Odoo user
 # -------------------------------
 USER odoo
 
 # -------------------------------
-# Expose default Odoo port
-# -------------------------------
-EXPOSE 8069
-
-# -------------------------------
-# Entrypoint
+# Default command
 # -------------------------------
 CMD ["./odoo-bin", "-c", "odoo.conf"]
+
 
