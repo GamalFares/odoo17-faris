@@ -1,10 +1,13 @@
-# Use official Python 3.11 slim image
+# === Base image ===
 FROM python:3.11-slim
 
 # === Set environment variables ===
-ENV ODOO_HOME=/usr/src/odoo
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    ODOO_HOME=/usr/src/odoo \
+    PATH="/usr/src/odoo/venv/bin:$PATH"
 
 # === Install system dependencies ===
 RUN apt-get update && apt-get install -y \
@@ -13,43 +16,39 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     libpq-dev \
-    libsasl2-dev \
     libxml2-dev \
     libxslt1-dev \
+    libsasl2-dev \
     libldap2-dev \
     libssl-dev \
     python3-venv \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# === Create Odoo user ===
-RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
+# === Create odoo user ===
+RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
 
 # === Set working directory ===
-WORKDIR $ODOO_HOME
+WORKDIR /usr/src/odoo
 
-# === Copy Odoo source files ===
-COPY odoo $ODOO_HOME/odoo
-COPY odoo-bin $ODOO_HOME/odoo-bin
+# === Copy Odoo source and configs ===
+COPY odoo /usr/src/odoo/odoo
+COPY odoo-bin /usr/src/odoo/odoo-bin
 COPY odoo.conf /etc/odoo/odoo.conf
-COPY requirements.txt $ODOO_HOME/requirements.txt
+COPY requirements.txt /usr/src/odoo/requirements.txt
 
-# Make odoo-bin executable
-RUN chmod +x $ODOO_HOME/odoo-bin
+# === Make odoo-bin executable ===
+RUN chmod +x /usr/src/odoo/odoo-bin
 
-# === Create Python virtual environment and install dependencies ===
-RUN python3 -m venv $ODOO_HOME/venv \
-    && $ODOO_HOME/venv/bin/pip install --upgrade pip \
-    && $ODOO_HOME/venv/bin/pip install -r $ODOO_HOME/requirements.txt
+# === Create virtual environment and install Python dependencies ===
+RUN python3 -m venv /usr/src/odoo/venv \
+    && /usr/src/odoo/venv/bin/pip install --upgrade pip \
+    && /usr/src/odoo/venv/bin/pip install -r /usr/src/odoo/requirements.txt
 
-# === Set PATH to include virtualenv binaries ===
-ENV PATH="$ODOO_HOME/venv/bin:$PATH"
+# === Set the container user ===
+USER odoo
 
-# === Expose default Odoo port ===
-EXPOSE 8069
-
-# === Run Odoo ===
-CMD ["odoo-bin", "-c", "/etc/odoo/odoo.conf"]
-
+# === Default command to run Odoo ===
+CMD ["/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
 
 
