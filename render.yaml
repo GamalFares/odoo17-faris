@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: odoo
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python odoo-bin -c odoo.conf
+    envVars:
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      - key: PORT
+        value: 10000
+      - key: ODOO_RC
+        value: /opt/render/project/src/odoo.conf
