@@ -1,73 +1,60 @@
-# Use official Python image
+# -------------------------------
+# Base image
+# -------------------------------
 FROM python:3.11-slim
 
+# -------------------------------
 # Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV ODOO_RC=/etc/odoo.conf
+# -------------------------------
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Create work directory
-WORKDIR /usr/src/odoo
-
-# Copy Odoo source
-COPY ./odoo /usr/src/odoo
-
-# Copy configuration
-COPY ./odoo.conf /etc/odoo.conf
-
+# -------------------------------
 # Install system dependencies
+# -------------------------------
 RUN apt-get update && apt-get install -y \
     build-essential \
+    wget \
+    git \
     libpq-dev \
     libxml2-dev \
     libxslt1-dev \
-    libldap2-dev \
-    libsasl2-dev \
-    libtiff5-dev \
-    libjpeg62-turbo-dev \
-    libopenjp2-7-dev \
-    liblcms2-dev \
-    libwebp-dev \
-    libharfbuzz-dev \
-    libfribidi-dev \
-    libxcb1-dev \
-    python3-dev \
+    libjpeg-dev \
+    libffi-dev \
     libssl-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies manually (since no requirements.txt)
-RUN pip install --upgrade pip \
-    && pip install setuptools wheel \
-    && pip install \
-        psycopg2-binary \
-        babel \
-        decorator \
-        docutils \
-        ebaysdk \
-        feedparser \
-        gevent \
-        greenlet \
-        Jinja2 \
-        lxml \
-        MarkupSafe \
-        passlib \
-        Pillow \
-        psutil \
-        pydot \
-        pyparsing \
-        PyPDF2 \
-        reportlab \
-        requests \
-        six \
-        xlrd \
-        XlsxWriter \
-        polib \
-        werkzeug
+# -------------------------------
+# Set working directory
+# -------------------------------
+WORKDIR /usr/src/odoo
 
-# Make odoo-bin executable (important)
-RUN chmod +x /usr/src/odoo/odoo-bin
+# -------------------------------
+# Copy the entire project
+# -------------------------------
+COPY . /usr/src/odoo
 
+# -------------------------------
+# Upgrade pip and install Python dependencies
+# -------------------------------
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# -------------------------------
+# Make odoo-bin executable
+# -------------------------------
+RUN chmod +x odoo-bin
+
+# -------------------------------
 # Expose Odoo port
+# -------------------------------
 EXPOSE 8069
 
-# Default command
-CMD ["python3", "/usr/src/odoo/odoo-bin", "-c", "/etc/odoo.conf"]
+# -------------------------------
+# Command to run Odoo
+# -------------------------------
+CMD ["python3", "odoo-bin", "-c", "odoo.conf"]
+
