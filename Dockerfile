@@ -32,6 +32,7 @@ COPY odoo-bin $ODOO_HOME/odoo-bin
 COPY odoo.conf $ODOO_HOME/odoo.conf
 COPY requirements.txt $ODOO_HOME/requirements.txt
 
+
 # Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
