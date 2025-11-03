@@ -46,10 +46,12 @@ RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 # -------------------------------
 # Copy Odoo source and config
 # -------------------------------
+# Copy Odoo source and config
 COPY odoo $ODOO_HOME/odoo
-COPY odoo-bin $ODOO_HOME/odoo-bin
-COPY odoo.conf $ODOO_HOME/odoo.conf
+COPY odoo/odoo-bin $ODOO_HOME/odoo-bin
+COPY odoo/odoo.conf $ODOO_HOME/odoo.conf
 RUN chmod +x $ODOO_HOME/odoo-bin
+
 
 # -------------------------------
 # Expose Odoo port
