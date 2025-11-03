@@ -1,13 +1,11 @@
-# -------------------------------
-# Base image
-# -------------------------------
+# Use official Python slim image
 FROM python:3.11-slim
 
 # -------------------------------
-# Environment variables
+# Set environment variables
 # -------------------------------
 ENV ODOO_HOME=/usr/src/odoo
-ENV PATH=$ODOO_HOME:$PATH
+ENV PATH=$ODOO_HOME/venv/bin:$PATH
 
 # -------------------------------
 # Install system dependencies
@@ -34,12 +32,12 @@ RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
 WORKDIR $ODOO_HOME
 
 # -------------------------------
-# Copy project files
+# Copy Odoo source and config
 # -------------------------------
-COPY requirements.txt $ODOO_HOME/requirements.txt
 COPY odoo $ODOO_HOME/odoo
-COPY odoo-bin $ODOO_HOME/odoo-bin
-COPY odoo.conf $ODOO_HOME/odoo.conf
+COPY odoo/odoo-bin $ODOO_HOME/odoo-bin
+COPY odoo/odoo.conf $ODOO_HOME/odoo.conf
+COPY requirements.txt $ODOO_HOME/requirements.txt
 
 # -------------------------------
 # Make odoo-bin executable
@@ -52,14 +50,17 @@ RUN chmod +x $ODOO_HOME/odoo-bin
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 
+# Install Odoo as editable package
+RUN pip install -e $ODOO_HOME/odoo
+
 # -------------------------------
 # Expose Odoo port
 # -------------------------------
 EXPOSE 8069
 
 # -------------------------------
-# Start Odoo
+# Run Odoo
 # -------------------------------
+USER odoo
 CMD ["./odoo-bin", "-c", "odoo.conf"]
-
 
