@@ -4,11 +4,10 @@
 FROM python:3.11-slim
 
 # -------------------------------
-# Set environment variables
+# Environment variables
 # -------------------------------
 ENV ODOO_HOME=/usr/src/odoo
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PATH="$ODOO_HOME/venv/bin:$PATH"
 
 # -------------------------------
 # Install system dependencies
@@ -38,24 +37,26 @@ RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
 WORKDIR $ODOO_HOME
 
 # -------------------------------
-# Copy requirements and install Python packages
-# -------------------------------
-COPY requirements.txt $ODOO_HOME/requirements.txt
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
-
-# -------------------------------
-# Copy Odoo source code and config
+# Copy Odoo source files
 # -------------------------------
 COPY odoo $ODOO_HOME/odoo
 COPY odoo-bin $ODOO_HOME/odoo-bin
 COPY odoo.conf $ODOO_HOME/odoo.conf
+COPY requirements.txt $ODOO_HOME/requirements.txt
 
+# -------------------------------
+# Install Python dependencies
+# -------------------------------
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
+
+# -------------------------------
 # Make odoo-bin executable
+# -------------------------------
 RUN chmod +x $ODOO_HOME/odoo-bin
 
 # -------------------------------
-# Expose Odoo default port
+# Expose Odoo port
 # -------------------------------
 EXPOSE 8069
 
