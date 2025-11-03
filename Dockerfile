@@ -1,70 +1,46 @@
-# -------------------------------
-# Base image
-# -------------------------------
+# === Base Image ===
 FROM python:3.11-slim
 
-# -------------------------------
-# Environment variables
-# -------------------------------
-ENV ODOO_HOME=/usr/src/odoo
-ENV PATH="$ODOO_HOME/venv311/bin:$PATH"
-
-# -------------------------------
-# Install system dependencies
-# -------------------------------
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        gcc \
-        g++ \
-        libxml2-dev \
-        libxslt-dev \
-        libpq-dev \
-        libjpeg-dev \
-        zlib1g-dev \
-        libffi-dev \
-        curl \
-        git \
-        wget \
-    && apt-get clean \
+# === System Dependencies ===
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    gcc \
+    g++ \
+    libpq-dev \
+    libsasl2-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libldap2-dev \
+    libssl-dev \
+    python3-dev \
+    python3-venv \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# -------------------------------
-# Create Odoo user
-# -------------------------------
-RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
+# === Create odoo user ===
+RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
 
-# -------------------------------
-# Set working directory
-# -------------------------------
-WORKDIR $ODOO_HOME
+WORKDIR /usr/src/odoo
 
-# -------------------------------
-# Copy source files
-# -------------------------------
-COPY odoo $ODOO_HOME/odoo
-COPY odoo-bin $ODOO_HOME/odoo-bin
-COPY odoo.conf $ODOO_HOME/odoo.conf
-COPY requirements.txt $ODOO_HOME/requirements.txt
+# === Copy Odoo source ===
+COPY odoo /usr/src/odoo/odoo
+COPY odoo-bin /usr/src/odoo/odoo-bin
+COPY requirements.txt /usr/src/odoo/requirements.txt
+COPY odoo.conf /etc/odoo/odoo.conf
 
-# -------------------------------
-# Make odoo-bin executable
-# -------------------------------
-RUN chmod +x $ODOO_HOME/odoo-bin
+# === Permissions ===
+RUN chmod +x /usr/src/odoo/odoo-bin
+RUN chown -R odoo:odoo /usr/src/odoo
 
-# -------------------------------
-# Create virtual environment and install Python dependencies
-# -------------------------------
-RUN python -m venv venv311
-RUN $ODOO_HOME/venv311/bin/pip install --upgrade pip
-RUN $ODOO_HOME/venv311/bin/pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
+# === Virtual Env ===
+RUN python -m venv /usr/src/odoo/venv311
+RUN /usr/src/odoo/venv311/bin/pip install --upgrade pip
+RUN /usr/src/odoo/venv311/bin/pip install -r /usr/src/odoo/requirements.txt
 
-# -------------------------------
-# Set Odoo user
-# -------------------------------
 USER odoo
 
-# -------------------------------
-# Default command
-# -------------------------------
-CMD ["./odoo-bin", "-c", "odoo.conf"]
+EXPOSE 8069
 
-
+# === Default Command ===
+CMD ["/usr/src/odoo/venv311/bin/python", "/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
