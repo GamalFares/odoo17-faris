@@ -1,14 +1,8 @@
-# Use official Python 3.11 slim image
+# Base image
 FROM python:3.11-slim
 
-# Set environment variables
+# Environment
 ENV ODOO_HOME=/usr/src/odoo
-ENV PATH="$ODOO_HOME/venv/bin:$PATH"
-
-# Create Odoo user
-RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
-
-# Set working directory
 WORKDIR $ODOO_HOME
 
 # Install system dependencies
@@ -26,23 +20,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy files from repo to container
-COPY odoo $ODOO_HOME/odoo
-COPY odoo-bin $ODOO_HOME/odoo-bin
-COPY odoo.conf $ODOO_HOME/odoo.conf
+# Create Odoo user
+RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
+
+# Copy files from repo
 COPY requirements.txt $ODOO_HOME/requirements.txt
+COPY odoo $ODOO_HOME/odoo
+COPY odoo.conf $ODOO_HOME/odoo.conf
 
+# Make odoo-bin executable
+RUN chmod +x $ODOO_HOME/odoo/odoo-bin
 
-# Upgrade pip and install Python dependencies
+# Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r $ODOO_HOME/requirements.txt
 
-# Make odoo-bin executable
-RUN chmod +x $ODOO_HOME/odoo-bin
-
-# Expose default Odoo port
+# Expose Odoo port
 EXPOSE 8069
 
 # Run Odoo
-CMD ["python3", "/usr/src/odoo/odoo-bin", "-c", "/usr/src/odoo/odoo.conf"]
+CMD ["./odoo/odoo-bin", "-c", "odoo.conf"]
 
