@@ -4,28 +4,16 @@
 FROM python:3.11-slim
 
 # -------------------------------
-# Set environment variables
+# Environment variables
 # -------------------------------
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # -------------------------------
-# Install system dependencies
+# Create Odoo user
 # -------------------------------
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    wget \
-    git \
-    libpq-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    libjpeg-dev \
-    libffi-dev \
-    libssl-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -d /home/odoo -s /bin/bash odoo
 
 # -------------------------------
 # Set working directory
@@ -33,20 +21,20 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /usr/src/odoo
 
 # -------------------------------
-# Copy the entire project
+# Copy project files into container
 # -------------------------------
 COPY . /usr/src/odoo
 
 # -------------------------------
-# Upgrade pip and install Python dependencies
+# Upgrade pip and install dependencies
 # -------------------------------
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r /usr/src/odoo/requirements.txt
 
 # -------------------------------
 # Make odoo-bin executable
 # -------------------------------
-RUN chmod +x odoo-bin
+RUN chmod +x /usr/src/odoo/odoo-bin
 
 # -------------------------------
 # Expose Odoo port
@@ -54,7 +42,11 @@ RUN chmod +x odoo-bin
 EXPOSE 8069
 
 # -------------------------------
-# Command to run Odoo
+# Use non-root user
 # -------------------------------
-CMD ["python3", "odoo-bin", "-c", "odoo.conf"]
+USER odoo
 
+# -------------------------------
+# Start Odoo
+# -------------------------------
+CMD ["python3", "/usr/src/odoo/odoo-bin", "-c", "/usr/src/odoo/odoo.conf"]
