@@ -1,14 +1,12 @@
-# Use official Python 3.11 slim image
+# Use official Python slim image
 FROM python:3.11-slim
 
 # Set environment variables
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    ODOO_HOME=/usr/src/odoo
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PATH="/usr/src/odoo/venv/bin:$PATH"
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -25,10 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create Odoo user
-RUN useradd -m -d $ODOO_HOME -s /bin/bash odoo
+RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
 
 # Set working directory
-WORKDIR $ODOO_HOME
+WORKDIR /usr/src/odoo
 
 # Copy Odoo source
 COPY odoo /usr/src/odoo/odoo
@@ -36,16 +34,16 @@ COPY odoo-bin /usr/src/odoo/odoo-bin
 COPY odoo.conf /etc/odoo/odoo.conf
 COPY requirements.txt /usr/src/odoo/requirements.txt
 
-# Set permissions
+# Make odoo-bin executable
 RUN chmod +x /usr/src/odoo/odoo-bin
 
-# Create virtual environment and install Python dependencies
-RUN python3 -m venv $ODOO_HOME/venv \
-    && $ODOO_HOME/venv/bin/pip install --upgrade pip \
-    && $ODOO_HOME/venv/bin/pip install -r /usr/src/odoo/requirements.txt
+# Create Python virtual environment and install dependencies
+RUN python3 -m venv /usr/src/odoo/venv \
+    && /usr/src/odoo/venv/bin/pip install --upgrade pip \
+    && /usr/src/odoo/venv/bin/pip install -r /usr/src/odoo/requirements.txt
 
-# Expose Odoo port for Render
-EXPOSE 8080
+# Expose Odoo port
+EXPOSE 8069
 
 # Run Odoo
-CMD ["/usr/src/odoo/venv/bin/python3", "/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+CMD ["/usr/src/odoo/venv/bin/python", "/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
