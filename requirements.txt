@@ -13,4 +13,4 @@ html5lib==1.1
 lxml_html_clean==0.4.3
 passlib==1.7.4
 Pillow==10.0.0
-reportlab==4.4.4
+reportlab>=4.4.4
