@@ -32,5 +32,3 @@ idna
 ofxparse
 psutil
 
-# ⚙️ Replaced incompatible package:
-vatnumber-fix==1.2.1  # replaces old vatnumber==1.2
