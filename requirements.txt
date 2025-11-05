@@ -1,0 +1,27 @@
+# Core dependencies
+pytz==2025.2
+Babel==2.12.1
+python-dateutil==2.9.0
+lxml==6.0.2
+num2words==0.5.14
+psycopg2-binary==2.9.9
+Werkzeug==2.2.3
+Jinja2==3.1.2
+Markupsafe==2.1.2
+decorator==5.1.1
+requests==2.31.0
+
+# For HTML cleaning
+html5lib==1.1
+lxml_html_clean==0.4.3
+
+# Optional / extra dependencies
+passlib==1.7.4         # Password hashing
+Pillow==10.0.0         # Image processing
+reportlab==4.0.14      # PDF generation
+python-magic==0.4.27   # File type detection
+babel==2.12.1          # Localization
+
+# XML / RSS / SOAP support
+xmltodict==0.13.0
+zeep==5.1.0
