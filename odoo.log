@@ -1,0 +1,51 @@
+2025-11-04 23:57:18,461 71861 INFO ? odoo: Odoo version 17.0 
+2025-11-04 23:57:18,461 71861 INFO ? odoo: Using configuration file at /Users/gamalfares/odoo17-faris/odoo.conf 
+2025-11-04 23:57:18,461 71861 INFO ? odoo: addons paths: ['/Users/gamalfares/odoo17-faris/odoo/odoo/addons', '/Users/gamalfares/odoo17-faris/odoo/addons', '/Users/gamalfares/odoo17-faris/.local/share/Odoo/addons/17.0'] 
+2025-11-04 23:57:18,461 71861 INFO ? odoo: database: odoo@default:default 
+2025-11-04 23:57:20,368 71861 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2025-11-04 23:57:21,352 71861 INFO ? odoo.service.server: HTTP service (werkzeug) running on Gamals-MacBook-Air.local:8069 
+2025-11-04 23:57:21,359 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:21,364 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,238 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,251 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET / HTTP/1.1" 303 - 0 0.000 0.031
+2025-11-04 23:57:46,292 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,295 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,295 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web HTTP/1.1" 303 - 0 0.000 0.006
+2025-11-04 23:57:46,307 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,761 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,802 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/database/selector HTTP/1.1" 200 - 0 0.000 0.497
+2025-11-04 23:57:46,857 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,860 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,860 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/src/libs/fontawesome/css/font-awesome.css HTTP/1.1" 200 - 0 0.000 0.005
+2025-11-04 23:57:46,861 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/dist/css/bootstrap.css HTTP/1.1" 200 - 0 0.000 0.004
+2025-11-04 23:57:46,862 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,863 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/dom/manipulator.js HTTP/1.1" 200 - 0 0.000 0.004
+2025-11-04 23:57:46,864 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,865 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/dom/data.js HTTP/1.1" 200 - 0 0.000 0.006
+2025-11-04 23:57:46,866 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,867 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/dom/event-handler.js HTTP/1.1" 200 - 0 0.000 0.008
+2025-11-04 23:57:46,868 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,868 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/dom/selector-engine.js HTTP/1.1" 200 - 0 0.000 0.009
+2025-11-04 23:57:46,871 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,871 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/base-component.js HTTP/1.1" 200 - 0 0.000 0.003
+2025-11-04 23:57:46,872 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,873 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/lib/bootstrap/js/dist/modal.js HTTP/1.1" 200 - 0 0.000 0.004
+2025-11-04 23:57:46,874 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,875 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/src/public/database_manager.js HTTP/1.1" 200 - 0 0.000 0.005
+2025-11-04 23:57:46,879 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,880 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/img/logo2.png HTTP/1.1" 200 - 0 0.000 0.003
+2025-11-04 23:57:46,894 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:46,895 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:46] "GET /web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 - 0 0.000 0.003
+2025-11-04 23:57:47,310 71861 INFO ? odoo.sql_db: Connection to the database failed 
+2025-11-04 23:57:47,311 71861 INFO ? werkzeug: 127.0.0.1 - - [04/Nov/2025 23:57:47] "GET /web/service-worker.js HTTP/1.1" 404 - 0 0.000 0.004
+2025-11-04 23:58:19,269 71861 INFO ? odoo.service.server: Initiating shutdown 
+2025-11-04 23:58:19,269 71861 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2025-11-05 00:04:21,896 72729 INFO ? odoo: Odoo version 17.0 
+2025-11-05 00:04:21,897 72729 INFO ? odoo: Using configuration file at /Users/gamalfares/odoo17-faris/odoo.conf 
+2025-11-05 00:04:21,897 72729 INFO ? odoo: addons paths: ['/Users/gamalfares/odoo17-faris/odoo/odoo/addons', '/Users/gamalfares/odoo17-faris/odoo/addons', '/Users/gamalfares/odoo17-faris/.local/share/Odoo/addons/17.0'] 
+2025-11-05 00:04:21,897 72729 INFO ? odoo: database: odoo@localhost:5432 
+2025-11-05 00:04:22,005 72729 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2025-11-05 00:04:22,156 72729 INFO ? odoo.service.server: HTTP service (werkzeug) running on Gamals-MacBook-Air.local:8069 
+2025-11-05 00:04:32,801 72729 INFO ? odoo.service.server: Initiating shutdown 
+2025-11-05 00:04:32,802 72729 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2025-11-05 00:04:33,175 72729 INFO ? odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 2 connections  
