@@ -1,20 +1,20 @@
 services:
   - type: web
-    name: odoo17
+    name: odoo17-faris
     env: docker
-    plan: starter
+    plan: free
+    dockerfilePath: Dockerfile
     autoDeploy: true
-    dockerfilePath: ./Dockerfile
     envVars:
-      - key: ODOO_DB_HOST
-        value: render-postgres-xyz.internal
-      - key: ODOO_DB_PORT
+      - key: DATABASE_HOST
+        value: dpg-d459apadbo4c73fnv440-a.oregon-postgres.render.com
+      - key: DATABASE_PORT
         value: "5432"
-      - key: ODOO_DB_USER
-        value: odoo
-      - key: ODOO_DB_PASSWORD
-        value: strongpassword
-      - key: ODOO_DB_NAME
-        value: odoo17
+      - key: DATABASE_USER
+        value: odoo_db_wzxu_user
+      - key: DATABASE_PASSWORD
+        value: V8X1y2eagAe4lkoZMgOEP0nmNVGqwyXv
+      - key: DATABASE_NAME
+        value: odoo_db_wzxu
       - key: ODOO_ADMIN_PASSWORD
-        value: YourStrongAdminPassword
+        value: GF27-faris
