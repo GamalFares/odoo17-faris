@@ -1,0 +1,9 @@
+{
+  "python.defaultInterpreterPath": "venv_odoo17/bin/python",
+  "python.analysis.extraPaths": [
+    "./odoo"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  }
+}
