@@ -7,13 +7,15 @@ RUN apt-get update && apt-get install -y \
     libffi-dev liblcms2-dev libblas-dev libjpeg62-turbo-dev liblapack-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Odoo source
-COPY . /usr/src/odoo
+# Set working directory
 WORKDIR /usr/src/odoo
 
-# Install Python dependencies
-COPY requirements.txt /usr/src/odoo/
-RUN pip install --upgrade pip && pip install -r /usr/src/odoo/requirements.txt
+# Copy and install Python dependencies first (to use Docker layer caching)
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy the rest of the Odoo source code
+COPY . .
 
 # Create odoo user
 RUN useradd -m -d /var/lib/odoo -U -r -s /bin/bash odoo
