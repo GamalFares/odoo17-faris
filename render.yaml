@@ -1,14 +1,20 @@
 services:
   - type: web
-    name: odoo
-    env: python
-    plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: python odoo-bin -c odoo.conf
+    name: odoo17
+    env: docker
+    plan: starter
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHONPATH
-        value: /opt/render/project/src
-      - key: PORT
-        value: 10000
-      - key: ODOO_RC
-        value: /opt/render/project/src/odoo.conf
+      - key: ODOO_DB_HOST
+        value: render-postgres-xyz.internal
+      - key: ODOO_DB_PORT
+        value: "5432"
+      - key: ODOO_DB_USER
+        value: odoo
+      - key: ODOO_DB_PASSWORD
+        value: strongpassword
+      - key: ODOO_DB_NAME
+        value: odoo17
+      - key: ODOO_ADMIN_PASSWORD
+        value: YourStrongAdminPassword

@@ -1,13 +1,7 @@
-# Use official Python base image
+# Base image
 FROM python:3.11-slim
 
-# Set environment variables
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/usr/src/odoo
-
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -23,34 +17,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Create Odoo user
+# Add Odoo user
 RUN useradd -m -d /usr/src/odoo -s /bin/bash odoo
 
-# Set working directory
+# Working directory
 WORKDIR /usr/src/odoo
 
-# Copy Odoo source code
+# Copy source code
 COPY odoo /usr/src/odoo/odoo
 COPY odoo-bin /usr/src/odoo/odoo-bin
 COPY odoo.conf /etc/odoo/odoo.conf
 COPY requirements.txt /usr/src/odoo/requirements.txt
 
-# Give execution permission to odoo-bin
+# Set permissions
 RUN chmod +x /usr/src/odoo/odoo-bin
 
-# Create virtualenv and install Python requirements
+# Create virtualenv and install Python packages
 RUN python3 -m venv /usr/src/odoo/venv \
     && /usr/src/odoo/venv/bin/pip install --upgrade pip \
     && /usr/src/odoo/venv/bin/pip install -r /usr/src/odoo/requirements.txt
 
-# Change ownership to odoo user
-RUN chown -R odoo:odoo /usr/src/odoo /etc/odoo
+# Expose ports
+EXPOSE 8069 8072
 
-# Switch to odoo user
-USER odoo
-
-# Set workdir again for user context
-WORKDIR /usr/src/odoo
-
-# Run Odoo using venv python
-CMD ["/usr/src/odoo/venv/bin/python", "odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+# Run Odoo in worker mode
+CMD ["/usr/src/odoo/venv/bin/python3", "/usr/src/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
